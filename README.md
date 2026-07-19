@@ -1,81 +1,73 @@
 # PUT-PDN
 
-Official-code preparation for **“Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception”**, published in *Information Fusion* (2026), article 104624. [https://doi.org/10.1016/j.inffus.2026.104624](https://doi.org/10.1016/j.inffus.2026.104624)
+Official code preparation for **“Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception”**, published in *Information Fusion* (2026), article 104624. [https://doi.org/10.1016/j.inffus.2026.104624](https://doi.org/10.1016/j.inffus.2026.104624)
 
 [中文说明](README_zh-CN.md)
 
-## Release status
+![Overall architecture of the proposed framework](assets/figure1_architecture.png)
 
-This repository currently provides the cleaned and consolidated **Physics-Constrained Unfolding Transformer (PUT)** code for HSI–PAN fusion on Indian, Pavia, Chikusei, Xiongan, Liaoning-1, and Liaoning-2.
+**Figure 1.** The proposed physics-constrained fusion and prior-guided classification framework.
 
-The six archived experiment directories did **not** contain a runnable implementation of the paper's **Physics-Aware Dual-Prior Classification Network (PDN)**. PDN is therefore not included in this preparation, and this repository should not yet be advertised as a complete PUT–PDN reproduction. Add and verify the authors' final PDN source before the public release.
+## Overview
 
-## Method
+The **Physics-Constrained Unfolding Transformer (PUT)** reconstructs a high-resolution hyperspectral image from a low-resolution HSI and a high-resolution PAN observation. PUT combines:
 
-PUT unfolds the HSI–PAN observation model into alternating learned-prior and data-fidelity updates. Its main components are:
-
-- a Spatial–Spectral Synergy Block (SSSB) that couples PAN-conditioned spatial information with HSI spectral information;
+- a physics-constrained unfolding process based on the sensor observation model;
+- a truncated high-order Neumann expansion for efficient data-fidelity updates;
+- a Spatial-Spectral Synergy Block for PAN-conditioned spatial-spectral representation learning;
 - learnable spatial and spectral degradation operators;
-- a truncated Neumann-style recurrence in each physics-constrained data-fidelity block;
-- observation-consistency supervision for both reconstructed PAN and LR-HSI.
+- observation-consistency supervision in the PAN and LR-HSI domains.
 
-The fusion objective used by the released trainer is
+The current repository contains the complete PUT fusion implementation. A complete runnable PDN classification implementation was not present in the audited fusion experiment directories and is therefore not included in this release preparation.
 
-```text
-L = L1(HR-HSI_hat, HR-HSI)
-  + 0.1 L1(PAN_hat, PAN)
-  + 0.1 L1(LR-HSI_hat, LR-HSI).
-```
+### Detailed architecture
 
-## Repository layout
+![Detailed PUT and prior-guided classification architecture](figs/fig1.png)
 
-```text
-PUT-PDN/
-├── src/put_pdn/
-│   ├── models/put.py       # cleaned PUT (original name: Net0512/ZAB0512)
-│   ├── data.py             # unified loaders for all six datasets
-│   ├── train.py            # training CLI
-│   ├── evaluate.py         # validation and full-scene inference CLI
-│   ├── inference.py        # overlap-tiled inference
-│   └── metrics.py          # PSNR, SSIM, SAM, ERGAS, RMSE
-├── legacy/zab2.py          # traceable earlier architecture, not the final trained PUT
-├── docs/DATASETS.md        # exact data layouts and preprocessing
-├── docs/SOURCE_PROVENANCE.md
-├── train_put.py
-└── test_put.py
-```
+## Reproduced results
+
+The public PUT code was evaluated with the paper checkpoints and original test data on NVIDIA Tesla V100S GPUs. The metric implementation uses the same `imgvision==0.1.7.3` backend as the paper experiments.
+
+| Dataset | Stages | PSNR | SSIM | SAM | ERGAS | RMSE | Paper match |
+|---|---:|---:|---:|---:|---:|---:|:---:|
+| Indian | 3 | 60.01 | 0.9974 | 1.1906 | 0.5911 | 0.0020 | Yes |
+| Pavia | 3 | 36.12 | 0.9742 | 4.2595 | 3.2078 | 0.0206 | Yes |
+| Chikusei | 5 | 45.68 | 0.9914 | 2.7261 | 4.1207 | 0.0057 | Yes |
+| Xiongan | 5 | 47.75 | 0.9961 | 0.9653 | 0.6360 | 0.0049 | Yes |
+
+All 30 rerun metric cells match the published tables after rounding to the displayed precision. Full-precision outputs and environment details are stored in [`results/reproduction_20260719.json`](results/reproduction_20260719.json). The complete comparison with FusionNet, PanFormer, LGPConv, PMACNet, WFANet, GPPNN, LGTEUN, DISPNet, and SSUNNet is available in [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md).
 
 ## Installation
 
-Python 3.9 and PyTorch 2.1 were used in the archived server environment. Install the PyTorch build appropriate for your CUDA version first, then install the project:
+The verified environment uses Python 3.9 and PyTorch 2.1. Install the PyTorch build appropriate for your CUDA version first, then install PUT:
 
 ```bash
 conda create -n put-pdn python=3.9 -y
 conda activate put-pdn
-# Install the matching PyTorch/CUDA build from https://pytorch.org/get-started/locally/
+# Install the appropriate PyTorch/CUDA build from pytorch.org.
 pip install -e .
 ```
 
-For a record of the original package versions, see [`environment.yml`](environment.yml).
+Exact experiment package versions are recorded in [`environment.yml`](environment.yml).
 
 ## Data
 
-Datasets are not redistributed. Arrange the original files as described in [`docs/DATASETS.md`](docs/DATASETS.md), then pass that dataset directory with `--data-root`.
+Datasets are not redistributed. Arrange the source files as described in [`docs/DATASETS.md`](docs/DATASETS.md), then pass the corresponding directory through `--data-root`.
 
-| CLI name | Bands | Paper epochs | Default stages | Split type |
+| CLI name | Bands | Epochs | Default stages | Protocol |
 |---|---:|---:|---:|---|
 | `indian` | 220 | 100 | 3 | simulated |
 | `pavia` | 102 | 100 | 3 | simulated/prepared HDF5 |
 | `chikusei` | 128 | 300 | 5 | simulated |
 | `xiongan` | 93 | 300 | 5 | simulated |
-| `ln1` | 166 | 100 | 3 | Wald + real full scene |
-| `ln2` | 144 | 100 | 3 | Wald + real full scene |
+| `ln1` | 166 | 100 | 3 | Wald and real full scene |
+| `ln2` | 144 | 100 | 3 | Wald and real full scene |
 
-The paper uses three stages as the primary setting and also reports five-stage results. Dataset defaults reflect the reported observation that three stages work better on the smaller Indian/Pavia datasets and five stages work better on the larger Chikusei/Xiongan datasets. Override this with `--stage` for an exact ablation or checkpoint.
+The paper uses three stages as the primary setting and additionally reports five-stage results. Use `--stage` to select a specific depth.
 
 ## Training
 
-The defaults reproduce the paper protocol: 64×64 HR patches, 4× spatial ratio, batch size 10, 100 iterations per epoch, Adam, initial learning rate `2e-4`, and cosine decay to `1e-6`.
+The defaults follow the paper protocol: 64×64 HR patches, spatial ratio 4, batch size 10, 100 iterations per epoch, Adam, initial learning rate `2e-4`, and cosine decay to `1e-6`.
 
 ```bash
 python train_put.py --dataset indian --data-root /path/to/Indian --output runs
@@ -86,37 +78,62 @@ python train_put.py --dataset ln1 --data-root /path/to/Liaoning-1 --output runs
 python train_put.py --dataset ln2 --data-root /path/to/Liaoning-2 --output runs
 ```
 
-Checkpoints and JSONL logs are written under `runs/<dataset>/<stage>stages/`. Resume with `--resume runs/.../latest.pth`.
+The optimization objective is
 
-## Evaluation and inference
+```text
+L = L1(HR-HSI_hat, HR-HSI)
+  + 0.1 L1(PAN_hat, PAN)
+  + 0.1 L1(LR-HSI_hat, LR-HSI).
+```
 
-Evaluate a simulated/Wald split:
+Checkpoints and JSONL logs are written to `runs/<dataset>/<stage>stages/`. Resume training with `--resume`.
+
+## Evaluation
+
+Evaluate a simulated or Wald-protocol split:
 
 ```bash
 python test_put.py \
   --dataset chikusei \
   --data-root /path/to/Chikusei \
-  --checkpoint runs/chikusei/5stages/best.pth \
-  --split val
+  --checkpoint /path/to/put_checkpoint.pth \
+  --stage 5 --split val
 ```
 
-Run overlap-tiled inference on a real Liaoning scene:
+Use `--metrics-only` to skip prediction files during benchmark evaluation. For a Liaoning full scene, overlap-tiled inference reduces memory usage:
 
 ```bash
 python test_put.py \
   --dataset ln1 \
   --data-root /path/to/Liaoning-1 \
-  --checkpoint runs/ln1/3stages/best.pth \
-  --split full --tile-size 128 --overlap 16
+  --checkpoint /path/to/put_checkpoint.pth \
+  --stage 3 --split full --tile-size 128 --overlap 16
 ```
 
-Predictions are saved as MATLAB files with an `HSI` variable in H×W×B layout. Full-reference validation also writes `metrics.json`. By default, metrics use the same `imgvision==0.1.7.3` backend as the archived experiment scripts; a documented NumPy/scikit-image implementation is retained as a fallback.
+Predictions are MATLAB files containing `HSI` in H×W×B layout. Validation writes PSNR, SSIM, SAM, ERGAS, and RMSE to `metrics.json`.
 
-### Original checkpoints
+## Project structure
 
-The final experiment scripts called this network `zab0512` and instantiated `architecture/Net0512.py`; the public class is now named `PUT`. Parameter names were retained, and `ZAB0512` remains an alias, so original checkpoints can be loaded through the provided checkpoint helper. The `--stage` value must match the checkpoint depth. One Chikusei variant contains weights for an inconsistent, inactive `lms` initialiser branch; the loader reports and discards only those six dead-branch tensors, then applies strict matching to every active PUT tensor.
-
-The file named `zab2.py` is byte-identical across all six server directories, but the final training/test scripts and available checkpoints target `Net0512.py`. It is preserved under `legacy/` for provenance rather than presented as the published final implementation.
+```text
+PUT-PDN/
+├── assets/figure1_architecture.png
+├── figs/fig1.png
+├── docs/
+│   ├── BENCHMARKS.md
+│   ├── DATASETS.md
+│   └── IMPLEMENTATION_NOTES.md
+├── results/reproduction_20260719.json
+├── src/put_pdn/
+│   ├── models/put.py
+│   ├── data.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── inference.py
+│   └── metrics.py
+├── tools/
+├── train_put.py
+└── test_put.py
+```
 
 ## Citation
 
@@ -131,11 +148,11 @@ The file named `zab2.py` is byte-identical across all six server directories, bu
 }
 ```
 
-## Before making the repository public
+## Release checklist
 
-- add and validate the final PDN implementation, or rename/scope the repository explicitly as PUT-only;
-- publish checkpoint files only after confirming distribution rights;
-- add dataset download links and acknowledge each dataset's own licence;
-- choose and add a software licence. No software licence is granted by this preparation alone.
+- add the final PDN source if the repository is released as the complete PUT-PDN framework;
+- confirm permission before distributing checkpoints;
+- add official dataset links, citations, and licence notes;
+- select and add a software licence.
 
-See [`docs/SOURCE_PROVENANCE.md`](docs/SOURCE_PROVENANCE.md) for the source audit and consolidation decisions.
+See [`docs/IMPLEMENTATION_NOTES.md`](docs/IMPLEMENTATION_NOTES.md) for the consolidation scope.
