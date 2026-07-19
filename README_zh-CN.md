@@ -1,6 +1,6 @@
 # PUT-PDN
 
-论文 **“Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception”** 的官方代码整理版本。论文已发表于 *Information Fusion*（2026），文章号 104624：[https://doi.org/10.1016/j.inffus.2026.104624](https://doi.org/10.1016/j.inffus.2026.104624)。
+论文 **“Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception”** 的官方代码仓库。论文已发表于 *Information Fusion*（2026），文章号 104624：[https://doi.org/10.1016/j.inffus.2026.104624](https://doi.org/10.1016/j.inffus.2026.104624)。
 
 [English README](README.md)
 
@@ -18,24 +18,24 @@
 - 可学习的空间与光谱退化算子；
 - PAN 和 LR-HSI 两个观测域的一致性监督。
 
-当前仓库包含完整的 PUT 融合实现。已审计的融合实验目录中没有完整可运行的 PDN 分类源码，因此本次开源准备暂未包含 PDN。
+完整框架由用于高光谱全色锐化的 PUT 和用于下游分类的 PDN 组成。本仓库提供完整的 PUT 融合实现，PDN 分类代码目前正在整理中，将在后续更新中发布。
 
-## 论文结果复测
+## 论文实验结果
 
-已使用当前公开版 PUT 代码、论文 checkpoint 和原始测试数据，在 NVIDIA Tesla V100S GPU 上重新计算论文指标。指标后端与原实验保持一致，采用 `imgvision==0.1.7.3`。
+下表汇总了论文中报告的代表性 PUT 融合结果。PSNR、SSIM、SAM、ERGAS 和 RMSE 均使用 `imgvision==0.1.7.3` 计算。
 
-| 数据集 | 阶段数 | PSNR | SSIM | SAM | ERGAS | RMSE | 与论文一致 |
-|---|---:|---:|---:|---:|---:|---:|:---:|
-| Indian | 3 | 60.01 | 0.9974 | 1.1906 | 0.5911 | 0.0020 | 是 |
-| Pavia | 3 | 36.12 | 0.9742 | 4.2595 | 3.2078 | 0.0206 | 是 |
-| Chikusei | 5 | 45.68 | 0.9914 | 2.7261 | 4.1207 | 0.0057 | 是 |
-| Xiongan | 5 | 47.75 | 0.9961 | 0.9653 | 0.6360 | 0.0049 | 是 |
+| 数据集 | 阶段数 | PSNR | SSIM | SAM | ERGAS | RMSE |
+|---|---:|---:|---:|---:|---:|---:|
+| Indian | 3 | 60.01 | 0.9974 | 1.1906 | 0.5911 | 0.0020 |
+| Pavia | 3 | 36.12 | 0.9742 | 4.2595 | 3.2078 | 0.0206 |
+| Chikusei | 5 | 45.68 | 0.9914 | 2.7261 | 4.1207 | 0.0057 |
+| Xiongan | 5 | 47.75 | 0.9961 | 0.9653 | 0.6360 | 0.0049 |
 
-全部 30 个复测指标单元格在四舍五入至论文展示精度后均与已发表表格一致。完整精度结果和复测环境见 [`results/reproduction_20260719.json`](results/reproduction_20260719.json)。PUT 与 FusionNet、PanFormer、LGPConv、PMACNet、WFANet、GPPNN、LGTEUN、DISPNet 和 SSUNNet 的完整对比见 [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md)。
+其他阶段设置以及 PUT 与 FusionNet、PanFormer、LGPConv、PMACNet、WFANet、GPPNN、LGTEUN、DISPNet 和 SSUNNet 的完整对比见 [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md)。
 
 ## 安装
 
-已验证环境为 Python 3.9 和 PyTorch 2.1。请先安装与 CUDA 匹配的 PyTorch，再安装本项目：
+推荐环境为 Python 3.9 和 PyTorch 2.1。请先安装与 CUDA 匹配的 PyTorch，再安装本项目：
 
 ```bash
 conda create -n put-pdn python=3.9 -y
@@ -115,9 +115,7 @@ PUT-PDN/
 ├── assets/figure1_architecture.png
 ├── docs/
 │   ├── BENCHMARKS.md
-│   ├── DATASETS.md
-│   └── IMPLEMENTATION_NOTES.md
-├── results/reproduction_20260719.json
+│   └── DATASETS.md
 ├── src/put_pdn/
 │   ├── models/put.py
 │   ├── data.py
@@ -142,8 +140,6 @@ PUT-PDN/
   doi     = {10.1016/j.inffus.2026.104624}
 }
 ```
-
-代码整理范围见 [`docs/IMPLEMENTATION_NOTES.md`](docs/IMPLEMENTATION_NOTES.md)。
 
 ## 数据集致谢
 
