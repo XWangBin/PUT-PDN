@@ -20,10 +20,6 @@ The **Physics-Constrained Unfolding Transformer (PUT)** reconstructs a high-reso
 
 The current repository contains the complete PUT fusion implementation. A complete runnable PDN classification implementation was not present in the audited fusion experiment directories and is therefore not included in this release preparation.
 
-### Detailed architecture
-
-![Detailed PUT and prior-guided classification architecture](figs/fig1.png)
-
 ## Reproduced results
 
 The public PUT code was evaluated with the paper checkpoints and original test data on NVIDIA Tesla V100S GPUs. The metric implementation uses the same `imgvision==0.1.7.3` backend as the paper experiments.
