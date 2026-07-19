@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "put-pdn"
+version = "0.1.0"
+description = "Physics-Constrained Unfolding Transformer for HSI-PAN fusion"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+  {name = "Bin Wang"},
+  {name = "Xingchuang Xiong"},
+  {name = "Yusheng Lian"},
+  {name = "Kun Yu"},
+  {name = "Zilong Liu"},
+]
+dependencies = [
+  "torch>=2.1",
+  "numpy>=1.24,<2",
+  "scipy>=1.10",
+  "h5py>=3.8",
+  "opencv-python>=4.8",
+  "einops>=0.7",
+  "tifffile>=2023.7",
+  "scikit-image>=0.21",
+  "imgvision==0.1.7.3",
+]
+
+[project.scripts]
+put-train = "put_pdn.train:main"
+put-evaluate = "put_pdn.evaluate:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

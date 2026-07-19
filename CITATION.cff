@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the Information Fusion article."
+title: "PUT-PDN: Physics-Constrained Fusion and Prior-Guided Classification Framework"
+type: software
+version: 0.1.0
+date-released: 2026-07-19
+authors:
+  - family-names: Wang
+    given-names: Bin
+  - family-names: Xiong
+    given-names: Xingchuang
+  - family-names: Lian
+    given-names: Yusheng
+  - family-names: Yu
+    given-names: Kun
+  - family-names: Liu
+    given-names: Zilong
+preferred-citation:
+  type: article
+  title: "Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception"
+  authors:
+    - family-names: Wang
+      given-names: Bin
+    - family-names: Xiong
+      given-names: Xingchuang
+    - family-names: Lian
+      given-names: Yusheng
+    - family-names: Yu
+      given-names: Kun
+    - family-names: Liu
+      given-names: Zilong
+  journal: Information Fusion
+  year: 2026
+  doi: 10.1016/j.inffus.2026.104624
