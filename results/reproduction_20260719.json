@@ -1,0 +1,47 @@
+{
+  "date": "2026-07-19",
+  "hardware": "NVIDIA Tesla V100S-PCIE-32GB",
+  "python": "3.9.23",
+  "pytorch": "2.1.0",
+  "metric_backend": "imgvision==0.1.7.3",
+  "spatial_ratio": 4,
+  "display_precision_match": true,
+  "runs": [
+    {
+      "dataset": "Indian",
+      "stages": 3,
+      "reproduced": {"psnr": 60.00962448120117, "ssim": 0.9973626671011031, "sam": 1.1905564069747925, "ergas": 0.5911155138164759, "rmse": 0.00196018748864043},
+      "paper": {"psnr": 60.01, "ssim": 0.9974, "sam": 1.1906, "ergas": 0.5911, "rmse": 0.0020}
+    },
+    {
+      "dataset": "Pavia",
+      "stages": 3,
+      "reproduced": {"psnr": 36.11848258972168, "ssim": 0.9742407229725591, "sam": 4.25952672958374, "ergas": 3.207836300134659, "rmse": 0.020615475393912064},
+      "paper": {"psnr": 36.12, "ssim": 0.9742, "sam": 4.2595, "ergas": 3.2078, "rmse": 0.0206}
+    },
+    {
+      "dataset": "Pavia",
+      "stages": 5,
+      "reproduced": {"psnr": 36.02923583984375, "ssim": 0.9747039812199383, "sam": 4.237402439117432, "ergas": 3.1720291823148727, "rmse": 0.020987008206182517},
+      "paper": {"psnr": 36.03, "ssim": 0.9747, "sam": 4.2374, "ergas": 3.1720, "rmse": 0.0210}
+    },
+    {
+      "dataset": "Chikusei",
+      "stages": 5,
+      "reproduced": {"psnr": 45.67654800415039, "ssim": 0.991360924106662, "sam": 2.726109743118286, "ergas": 4.120730608701706, "rmse": 0.005696335250670341},
+      "paper": {"psnr": 45.68, "ssim": 0.9914, "sam": 2.7261, "ergas": 4.1207, "rmse": 0.0057}
+    },
+    {
+      "dataset": "Xiongan",
+      "stages": 3,
+      "reproduced": {"psnr": 47.609012603759766, "ssim": 0.9969719575237916, "sam": 0.9490622878074646, "ergas": 0.5877063143998384, "rmse": 0.004855695880666094},
+      "paper": {"psnr": 47.61, "ssim": 0.9970, "sam": 0.9491, "ergas": 0.5877, "rmse": 0.0049}
+    },
+    {
+      "dataset": "Xiongan",
+      "stages": 5,
+      "reproduced": {"psnr": 47.74876022338867, "ssim": 0.9961494788666033, "sam": 0.9653310775756836, "ergas": 0.6359630264341831, "rmse": 0.004900449327051327},
+      "paper": {"psnr": 47.75, "ssim": 0.9961, "sam": 0.9653, "ergas": 0.6360, "rmse": 0.0049}
+    }
+  ]
+}
