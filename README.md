@@ -1,6 +1,6 @@
 # PUT-PDN
 
-Official code preparation for **“Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception”**, published in *Information Fusion* (2026), article 104624. [https://doi.org/10.1016/j.inffus.2026.104624](https://doi.org/10.1016/j.inffus.2026.104624)
+Official implementation of **“Physics-Constrained Fusion and Prior-Guided Classification Framework for Remote Sensing Perception”**, published in *Information Fusion* (2026), article 104624. [https://doi.org/10.1016/j.inffus.2026.104624](https://doi.org/10.1016/j.inffus.2026.104624)
 
 [中文说明](README_zh-CN.md)
 
@@ -18,25 +18,25 @@ The **Physics-Constrained Unfolding Transformer (PUT)** reconstructs a high-reso
 - learnable spatial and spectral degradation operators;
 - observation-consistency supervision in the PAN and LR-HSI domains.
 
-The current repository contains the complete PUT fusion implementation. A complete runnable PDN classification implementation was not present in the audited fusion experiment directories and is therefore not included in this release preparation.
+The full framework consists of PUT for hyperspectral pansharpening and PDN for downstream classification. This repository provides the complete PUT fusion implementation. The PDN classification code is currently being organized and will be released in a future update.
 
 
-## Reproduced results
+## Results reported in the paper
 
-The public PUT code was evaluated with the paper checkpoints and original test data on NVIDIA Tesla V100S GPUs. The metric implementation uses the same `imgvision==0.1.7.3` backend as the paper experiments.
+The table below summarizes representative PUT fusion results reported in the paper. PSNR, SSIM, SAM, ERGAS, and RMSE were calculated with `imgvision==0.1.7.3`.
 
-| Dataset | Stages | PSNR | SSIM | SAM | ERGAS | RMSE | Paper match |
-|---|---:|---:|---:|---:|---:|---:|:---:|
-| Indian | 3 | 60.01 | 0.9974 | 1.1906 | 0.5911 | 0.0020 | Yes |
-| Pavia | 3 | 36.12 | 0.9742 | 4.2595 | 3.2078 | 0.0206 | Yes |
-| Chikusei | 5 | 45.68 | 0.9914 | 2.7261 | 4.1207 | 0.0057 | Yes |
-| Xiongan | 5 | 47.75 | 0.9961 | 0.9653 | 0.6360 | 0.0049 | Yes |
+| Dataset | Stages | PSNR | SSIM | SAM | ERGAS | RMSE |
+|---|---:|---:|---:|---:|---:|---:|
+| Indian | 3 | 60.01 | 0.9974 | 1.1906 | 0.5911 | 0.0020 |
+| Pavia | 3 | 36.12 | 0.9742 | 4.2595 | 3.2078 | 0.0206 |
+| Chikusei | 5 | 45.68 | 0.9914 | 2.7261 | 4.1207 | 0.0057 |
+| Xiongan | 5 | 47.75 | 0.9961 | 0.9653 | 0.6360 | 0.0049 |
 
-All 30 rerun metric cells match the published tables after rounding to the displayed precision. Full-precision outputs and environment details are stored in [`results/reproduction_20260719.json`](results/reproduction_20260719.json). The complete comparison with FusionNet, PanFormer, LGPConv, PMACNet, WFANet, GPPNN, LGTEUN, DISPNet, and SSUNNet is available in [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md).
+Additional stage settings and the complete comparison with FusionNet, PanFormer, LGPConv, PMACNet, WFANet, GPPNN, LGTEUN, DISPNet, and SSUNNet are available in [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md).
 
 ## Installation
 
-The verified environment uses Python 3.9 and PyTorch 2.1. Install the PyTorch build appropriate for your CUDA version first, then install PUT:
+The recommended environment uses Python 3.9 and PyTorch 2.1. Install the PyTorch build appropriate for your CUDA version first, then install PUT:
 
 ```bash
 conda create -n put-pdn python=3.9 -y
@@ -116,9 +116,7 @@ PUT-PDN/
 ├── assets/figure1_architecture.png
 ├── docs/
 │   ├── BENCHMARKS.md
-│   ├── DATASETS.md
-│   └── IMPLEMENTATION_NOTES.md
-├── results/reproduction_20260719.json
+│   └── DATASETS.md
 ├── src/put_pdn/
 │   ├── models/put.py
 │   ├── data.py
@@ -145,10 +143,6 @@ PUT-PDN/
 ```
 
 
-See [`docs/IMPLEMENTATION_NOTES.md`](docs/IMPLEMENTATION_NOTES.md) for the consolidation scope.
-
 ## Dataset acknowledgements
 
 We sincerely thank the creators and providers of all datasets used in the paper: Baumgardner, Biehl, and Landgrebe and the Purdue University Research Repository for the Indian data; Prof. Paolo Gamba and the University of Pavia for the Pavia scene; Cen *et al.* and the participating institutions for the Xiongan New Area (Matiwan Village) dataset; and the LISA team and Jia *et al.* for providing **both Liaoning-1 and Liaoning-2**. The corresponding original publications are linked in the data table above and should be cited when using these datasets.
-
-For Chikusei, we reproduce the acknowledgement requested by its providers: “The authors gratefully acknowledge Space Application Laboratory, Department of Advanced Interdisciplinary Studies, the University of Tokyo for providing the hyperspectral data.” We also thank Dr. Naoto Yokoya and Prof. Akira Iwasaki for making the dataset publicly available under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
