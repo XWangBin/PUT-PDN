@@ -20,6 +20,7 @@ The **Physics-Constrained Unfolding Transformer (PUT)** reconstructs a high-reso
 
 The current repository contains the complete PUT fusion implementation. A complete runnable PDN classification implementation was not present in the audited fusion experiment directories and is therefore not included in this release preparation.
 
+
 ## Reproduced results
 
 The public PUT code was evaluated with the paper checkpoints and original test data on NVIDIA Tesla V100S GPUs. The metric implementation uses the same `imgvision==0.1.7.3` backend as the paper experiments.
@@ -50,14 +51,14 @@ Exact experiment package versions are recorded in [`environment.yml`](environmen
 
 Datasets are not redistributed. Arrange the source files as described in [`docs/DATASETS.md`](docs/DATASETS.md), then pass the corresponding directory through `--data-root`.
 
-| CLI name | Bands | Epochs | Default stages | Protocol |
-|---|---:|---:|---:|---|
-| `indian` | 220 | 100 | 3 | simulated |
-| `pavia` | 102 | 100 | 3 | simulated/prepared HDF5 |
-| `chikusei` | 128 | 300 | 5 | simulated |
-| `xiongan` | 93 | 300 | 5 | simulated |
-| `ln1` | 166 | 100 | 3 | Wald and real full scene |
-| `ln2` | 144 | 100 | 3 | Wald and real full scene |
+| CLI name | Bands | Epochs | Default stages | Protocol | Dataset source and paper reference |
+|---|---:|---:|---:|---|---|
+| `indian` | 220 | 100 | 3 | simulated | [Purdue PURR data](https://doi.org/10.4231/R7RX991C) [43] |
+| `pavia` | 102 | 100 | 3 | simulated/prepared HDF5 | [Pavia Centre scene](https://www.ehu.eus/ccwintco/index.php?redirect=no&title=Hyperspectral_Remote_Sensing_Scenes#Pavia_Centre_and_University) · [reference [44]](https://doi.org/10.1109/JSTARS.2022.3220974) |
+| `chikusei` | 128 | 300 | 5 | simulated | [Author download page and citation](https://naotoyokoya.com/Download.html) [45] |
+| `xiongan` | 93 | 300 | 5 | simulated | [Dataset paper and source page](https://doi.org/10.11834/jrs.20209065) [46] |
+| `ln1` | 166 | 100 | 3 | Wald and real full scene | [LISA data release](https://drive.google.com/drive/folders/1JLCCB6ld5R49HDLN5SsMISx1d0fuqRjO) · [reference [47]](https://doi.org/10.1109/JSTARS.2025.3562278) |
+| `ln2` | 144 | 100 | 3 | Wald and real full scene | [LISA data release](https://drive.google.com/drive/folders/1JLCCB6ld5R49HDLN5SsMISx1d0fuqRjO) · [reference [47]](https://doi.org/10.1109/JSTARS.2025.3562278) |
 
 The paper uses three stages as the primary setting and additionally reports five-stage results. Use `--stage` to select a specific depth.
 
@@ -113,7 +114,6 @@ Predictions are MATLAB files containing `HSI` in H×W×B layout. Validation writ
 ```text
 PUT-PDN/
 ├── assets/figure1_architecture.png
-├── figs/fig1.png
 ├── docs/
 │   ├── BENCHMARKS.md
 │   ├── DATASETS.md
@@ -144,11 +144,11 @@ PUT-PDN/
 }
 ```
 
-## Release checklist
-
-- add the final PDN source if the repository is released as the complete PUT-PDN framework;
-- confirm permission before distributing checkpoints;
-- add official dataset links, citations, and licence notes;
-- select and add a software licence.
 
 See [`docs/IMPLEMENTATION_NOTES.md`](docs/IMPLEMENTATION_NOTES.md) for the consolidation scope.
+
+## Dataset acknowledgements
+
+We sincerely thank the creators and providers of all datasets used in the paper: Baumgardner, Biehl, and Landgrebe and the Purdue University Research Repository for the Indian data; Prof. Paolo Gamba and the University of Pavia for the Pavia scene; Cen *et al.* and the participating institutions for the Xiongan New Area (Matiwan Village) dataset; and the LISA team and Jia *et al.* for providing **both Liaoning-1 and Liaoning-2**. The corresponding original publications are linked in the data table above and should be cited when using these datasets.
+
+For Chikusei, we reproduce the acknowledgement requested by its providers: “The authors gratefully acknowledge Space Application Laboratory, Department of Advanced Interdisciplinary Studies, the University of Tokyo for providing the hyperspectral data.” We also thank Dr. Naoto Yokoya and Prof. Akira Iwasaki for making the dataset publicly available under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
